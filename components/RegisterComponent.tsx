@@ -1,11 +1,12 @@
 "use client";
 
+import { Eye, EyeClosed, PaperPlaneTilt } from "@phosphor-icons/react";
+import Image from "next/image";
 import React, { useState } from "react";
 import { Button } from "./ui/button";
-import Image from "next/image";
 import { Input } from "./ui/input";
-import { Eye, EyeClosed, PaperPlaneTilt } from "@phosphor-icons/react";
 import Link from "next/link";
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import {
   Select,
   SelectContent,
@@ -15,13 +16,12 @@ import {
   SelectValue,
 } from "./ui/select";
 
-export const LoginComponente = () => {
+export const RegisterComponent = () => {
   const [showPassword, setShowPassword] = useState(false);
 
   const tooglePasswordVisibility = () => {
     setShowPassword((prevShowPassword) => !prevShowPassword);
   };
-
   return (
     <section className=" bg-[#f2f2f2] h-full px-20 py-10">
       <div className="flex bg-white rounded-xl w-full h-[90vh] shadow-2xl">
@@ -58,40 +58,26 @@ export const LoginComponente = () => {
             </Select>
           </div>
           <div className="flex flex-col justify-center items-center h-full">
-            <h1 className="text-center text-8xl font-extrabold">Olá!</h1>
-            <p className="py-5 text-lg">Seja bem vindo a nossa comunidade</p>
+            <Avatar className="w-32 h-32 mb-5">
+              <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
+              <AvatarFallback>CN</AvatarFallback>
+            </Avatar>
             <form className="flex flex-col gap-5 w-80">
-              <Button className="flex w-full items-center hover:translate-y-2 gap-2 bg-transparent hover:bg-slate-300/30 transition text-textPrimary border border-neutral-800/20">
-                <Image
-                  src="google (1).svg"
-                  width={20}
-                  height={30}
-                  alt="icon google"
-                />
-                Entrar com Google
-              </Button>
-              <Button className="flex w-full items-center hover:translate-y-2 gap-2 bg-transparent hover:bg-slate-300/30 transition text-textPrimary border border-neutral-800/20">
-                <Image
-                  src="facebook.svg"
-                  width={20}
-                  height={30}
-                  alt="icon facebook"
-                />
-                Entrar com Facebook
-              </Button>
-              <div className="relative py-3">
-                <div className="absolute inset-0 flex items-center">
-                  <span className="w-full border-t" />
-                </div>
-                <div className="relative flex justify-center text-xs uppercase">
-                  <span className="bg-background px-2 text-muted-foreground">
-                    Ou continue com
-                  </span>
-                </div>
+              <div>
+                <label htmlFor="">Nome</label>
+                <Input placeholder="Nome" type="text" className="mt-2" />
               </div>
               <div>
-                <label htmlFor="">Email</label>
-                <Input placeholder="email" className="mt-2" />
+                <label htmlFor="" className="">
+                  Aniversário
+                </label>
+                <Input type="date" placeholder="aniversário" className="mt-2" />
+              </div>
+              <div>
+                <label htmlFor="" className="">
+                  Email
+                </label>
+                <Input placeholder="email" type="email" className="mt-3" />
               </div>
               <div className="relative">
                 <label htmlFor="" className="">
@@ -113,13 +99,13 @@ export const LoginComponente = () => {
                 type="submit"
                 className="w-full hover:bg-zinc-900/80 hover:translate-y-2"
               >
-                Entrar
+                Criar
               </Button>
               <p className="text-sm text-center">
-                Ainda não possuí uma conta?{" "}
-                <Link href="/register">
+                Já possuí uma conta?{" "}
+                <Link href="/">
                   <span className="underline cursor-pointer text-blue-700">
-                    Criar conta
+                    Entrar
                   </span>
                 </Link>
               </p>
@@ -128,7 +114,7 @@ export const LoginComponente = () => {
         </div>
         <div>
           <Image
-            src="/ticken_run.gif"
+            src="/dance.gif"
             width={800}
             height={1000}
             alt="gif"
