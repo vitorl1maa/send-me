@@ -2,6 +2,7 @@ import { cn } from "@/lib/utils";
 import "./globals.css";
 import type { Metadata } from "next";
 import { Inter, Roboto } from "next/font/google";
+import AuthProvider from "@/context/AuthProvider";
 
 const roboto = Roboto({ weight: ["400", "700", "900"], subsets: ["latin"] });
 
@@ -17,7 +18,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={cn(roboto.className, "min-h-screen")}>{children}</body>
+      <body className={cn(roboto.className, "min-h-screen")}>
+        <AuthProvider>{children}</AuthProvider>
+      </body>
     </html>
   );
 }

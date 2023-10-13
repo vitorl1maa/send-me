@@ -1,3 +1,9 @@
+import ChatComponent from "@/components/ChatComponent";
+
 export default async function Chat() {
-  return <h1>Chat</h1>;
+  return (
+    <main>
+      <ChatComponent />
+    </main>
+  );
 }
