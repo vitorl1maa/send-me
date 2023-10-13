@@ -1,10 +1,9 @@
-import LoginComponent from "@/components/LoginComponent";
-import Image from "next/image";
+import Authentication from "@/components/Authentication";
 
 export default function Login() {
   return (
     <main className="h-screen">
-      <LoginComponent />
+      <Authentication />
     </main>
   );
 }

@@ -3,6 +3,7 @@ import "./globals.css";
 import type { Metadata } from "next";
 import { Inter, Roboto } from "next/font/google";
 import AuthProvider from "@/context/AuthProvider";
+import { Toaster } from "@/components/ui/toaster";
 
 const roboto = Roboto({ weight: ["400", "700", "900"], subsets: ["latin"] });
 
@@ -18,7 +19,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={cn(roboto.className, "min-h-screen")}>
+      <body
+        className={cn(roboto.className, "min-h-screen")}
+        suppressHydrationWarning={true}
+      >
+        <Toaster />
         <AuthProvider>{children}</AuthProvider>
       </body>
     </html>

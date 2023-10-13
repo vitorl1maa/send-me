@@ -9,23 +9,6 @@ interface UserData {
 }
 
 export default function ChatComponent() {
-  const { data: session, status } = useSession();
-  const [userData, setUserData] = useState<UserData | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    if (session) {
-      fetch(`/api/users/${session.user.id}`)
-        .then((response) => response.json())
-        .then((data) => {
-          setUserData(data);
-          setIsLoading(false);
-        })
-        .catch((error) => {
-          console.error("Erro ao buscar os dados do usuário:", error);
-        });
-    }
-    setIsLoading(false);
-  }, [session]);
-  return <div>{session ? <h1>Chat</h1> : <></>}</div>;
+  const session = useSession();
+  return <div>{session?.data && <h1>Chat</h1>}</div>;
 }

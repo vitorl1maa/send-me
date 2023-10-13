@@ -5,7 +5,7 @@ import bcrypt from "bcrypt"
 export async function POST(req: NextRequest) {
 
   const data = await req.json()
-  const {image, name, email, date, password} = data
+  const {name, email, date, password, avatar} = data
 
   if(!name || !email || !password) {
     return NextResponse.json('Dados inválidos.', {status: 400})
@@ -23,11 +23,11 @@ export async function POST(req: NextRequest) {
 
   const user = await prisma.user.create({
     data:{
-      image,
       name,
       date,
       email,
-      hashedPassword
+      hashedPassword,
+      avatar
     }
   })
 

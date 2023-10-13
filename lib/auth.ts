@@ -50,22 +50,7 @@ export const authOptions: NextAuthOptions = {
     strategy: "jwt",
     maxAge: 60 * 60,
   },
-  jwt: { encode, decode },
   secret: process.env.NEXTAUTH_SECRET,
-  callbacks: {
-      session: async ({ session, token }) => {
-        if (session?.user) {
-          session.user.id = token.sub;
-        }
-        return session;
-      },
-      jwt: async ({ user, token }) => {
-        if (user) {
-          token.sub = user.id;
-        }
-        return token;
-      },
-  },
   debug: process.env.NODE_ENV === "development",
   pages: {
     signIn: "/chat"

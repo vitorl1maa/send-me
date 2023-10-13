@@ -1,9 +1,10 @@
-import RegisterComponent from "@/components/RegisterComponent";
+import FormUser from "@/components/FormUser";
+import { RegisterComponent } from "@/components/RegisterComponent";
 
-export default async function Register() {
+export default function Register() {
   return (
     <main>
-      <RegisterComponent />
+      <FormUser />
     </main>
   );
 }
