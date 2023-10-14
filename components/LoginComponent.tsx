@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "./ui/button";
 import Image from "next/image";
 import { Input } from "./ui/input";
@@ -34,14 +34,27 @@ export const LoginComponent = () => {
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [randomImage, setRandomImage] = useState<number>(0);
   const [data, setData] = useState<Iuser>({
     email: "",
     password: "",
   });
+  const images = [
+    "/ticken_run.gif",
+    "/hello.gif",
+    "/dance.gif",
+    "/turist.gif",
+    "/love_message.gif",
+  ];
 
   const tooglePasswordVisibility = () => {
     setShowPassword((prevShowPassword) => !prevShowPassword);
   };
+
+  useEffect(() => {
+    const randomImage = Math.floor(Math.random() * images.length);
+    setRandomImage(randomImage);
+  }, [randomImage]);
 
   async function handleSubmit(e: React.SyntheticEvent) {
     e.preventDefault();
@@ -54,7 +67,7 @@ export const LoginComponent = () => {
 
     if (res?.error) {
       toast({
-        title: "😖 Ops... Erro ao fazer login",
+        title: "Erro ao fazer login",
         description: res.error,
         variant: "destructive",
         action: (
@@ -91,9 +104,9 @@ export const LoginComponent = () => {
                 SEND <span className="text-[#EDBA30] pl-1"> ME</span>!
               </p>
             </Link>
-            <Select>
+            {/* <Select>
               <SelectTrigger className="w-[80px] rounded-full ">
-                <SelectValue placeholder="PT-BR" />
+                <SelectValue placeholder={selectedLanguage} />
               </SelectTrigger>
               <SelectContent>
                 <SelectGroup>
@@ -115,11 +128,13 @@ export const LoginComponent = () => {
                   </SelectItem>
                 </SelectGroup>
               </SelectContent>
-            </Select>
+            </Select> */}
           </div>
           <div className="flex flex-col justify-center items-center h-full">
             <h1 className="text-center text-8xl font-extrabold">Olá!</h1>
-            <p className="py-5 text-lg">Seja bem vindo a nossa comunidade</p>
+            <p className="py-5 text-lg">
+              Converse, conecte-se e compartilhe com o mundo!
+            </p>
             <div className="flex flex-col lg:flex-row gap-2">
               <Button
                 onClick={() => signIn("google", { callbackUrl: "/chat" })}
@@ -219,7 +234,7 @@ export const LoginComponent = () => {
         </div>
         <div className="hidden lg:flex">
           <Image
-            src="/ticken_run.gif"
+            src={images[randomImage]}
             width={800}
             height={1000}
             alt="gif"

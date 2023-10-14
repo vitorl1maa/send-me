@@ -10,7 +10,7 @@ import {
   UserCirclePlus,
 } from "@phosphor-icons/react";
 import Image from "next/image";
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import Link from "next/link";
@@ -49,6 +49,19 @@ export const RegisterComponent = () => {
     avatar: "",
   });
   const { toast } = useToast();
+  const [randomImage, setRandomImage] = useState<number>(0);
+  const images = [
+    "/ticken_run.gif",
+    "/hello.gif",
+    "/dance.gif",
+    "/turist.gif",
+    "/love_message.gif",
+  ];
+
+  useEffect(() => {
+    const randomImage = Math.floor(Math.random() * images.length);
+    setRandomImage(randomImage);
+  }, [randomImage]);
 
   const tooglePasswordVisibility = () => {
     setShowPassword((prevShowPassword) => !prevShowPassword);
@@ -142,7 +155,7 @@ export const RegisterComponent = () => {
                 SEND <span className="text-[#EDBA30] pl-1"> ME</span>!
               </p>
             </Link>
-            <Select>
+            {/* <Select>
               <SelectTrigger className="w-[80px] rounded-full ">
                 <SelectValue placeholder="PT-BR" />
               </SelectTrigger>
@@ -166,7 +179,7 @@ export const RegisterComponent = () => {
                   </SelectItem>
                 </SelectGroup>
               </SelectContent>
-            </Select>
+            </Select> */}
           </div>
           <div className="flex flex-col justify-center items-center h-full">
             <Avatar className="w-32 h-32 relative ">
@@ -178,7 +191,7 @@ export const RegisterComponent = () => {
             </Avatar>
             <button
               onClick={handleAddPhotoClick}
-              className="absolute top-[140px] lg:top-[180px] "
+              className="absolute top-[140px] lg:top-[175px] "
             >
               <UserCirclePlus size={32} />
             </button>
@@ -281,7 +294,7 @@ export const RegisterComponent = () => {
         </div>
         <div className="hidden lg:flex">
           <Image
-            src="/dance.gif"
+            src={images[randomImage]}
             width={800}
             height={1000}
             alt="gif"
