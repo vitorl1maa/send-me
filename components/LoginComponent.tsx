@@ -138,7 +138,7 @@ export const LoginComponent = () => {
             <div className="flex flex-col lg:flex-row gap-2">
               <Button
                 onClick={() => signIn("google", { callbackUrl: "/chat" })}
-                className="flex w-80 lg:w-52 items-center hover:translate-y-2 gap-2 bg-transparent hover:bg-slate-300/30 transition text-textPrimary border border-neutral-800/20"
+                className="flex w-80 lg:w-52 items-center hover:translate-y-2 gap-2 bg-transparent hover:bg-slate-300/30 transition text-textPrimary border border-neutral-800/20 hover:transition-all"
               >
                 <Image
                   src="google (1).svg"
@@ -150,7 +150,7 @@ export const LoginComponent = () => {
               </Button>
               <Button
                 onClick={() => signIn("github", { callbackUrl: "/chat" })}
-                className="flex w-80 lg:w-52 items-center hover:translate-y-2 gap-2 bg-transparent hover:bg-slate-300/30 transition text-textPrimary border border-neutral-800/20"
+                className="flex w-80 lg:w-52 items-center hover:translate-y-2 gap-2 bg-transparent hover:bg-slate-300/30 transition text-textPrimary border border-neutral-800/20 hover:transition-all"
               >
                 <Image
                   src="github-light.svg"
@@ -214,7 +214,7 @@ export const LoginComponent = () => {
               </div>
               <Button
                 disabled={isLoading}
-                className="w-full hover:bg-zinc-900/80 hover:translate-y-2"
+                className="w-full hover:bg-zinc-900/80 hover:translate-y-2 hover:transition-all"
               >
                 {isLoading && (
                   <CircleNotch className="mr-2 h-4 w-4 animate-spin" />
