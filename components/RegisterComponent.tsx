@@ -145,7 +145,7 @@ export const RegisterComponent = () => {
   console.log(data);
 
   return (
-    <section className=" bg-[#f2f2f2] h-full lg:px-20 lg:py-10">
+    <section className=" bg-[#f2f2f2] text-black h-full lg:px-20 lg:py-10">
       <div className="flex bg-white rounded-xl w-full h-screen lg:h-[90vh] shadow-2xl">
         <div className="w-full lg:w-1/2 flex flex-col  items-center container">
           <div className="flex justify-between w-full pt-5">
@@ -181,12 +181,12 @@ export const RegisterComponent = () => {
               </SelectContent>
             </Select> */}
           </div>
-          <div className="flex flex-col justify-center items-center h-full">
-            <Avatar className="w-32 h-32 relative ">
+          <div className="flex flex-col justify-center items-center h-full ">
+            <Avatar className="w-32 h-32 relative bg-none ">
               {avatarURL ? (
                 <AvatarImage src={avatarURL} className="z-30" />
               ) : (
-                <AvatarFallback></AvatarFallback>
+                <AvatarFallback className="bg-bgPrimary"></AvatarFallback>
               )}
             </Avatar>
             <button
@@ -214,7 +214,7 @@ export const RegisterComponent = () => {
                   disabled={isLoading}
                   value={data.name}
                   onChange={handleChange}
-                  className="mt-2"
+                  className="mt-2 bg-transparent border-zinc-400/30"
                 />
               </div>
               <div>
@@ -228,7 +228,7 @@ export const RegisterComponent = () => {
                   name="date"
                   value={data.date}
                   onChange={handleChange}
-                  className="mt-2"
+                  className="mt-2 bg-transparent border-zinc-400/30"
                 />
               </div>
               <div>
@@ -246,7 +246,7 @@ export const RegisterComponent = () => {
                   name="email"
                   value={data.email}
                   onChange={handleChange}
-                  className="mt-3"
+                  className="mt-2 bg-transparent border-zinc-400/30"
                 />
               </div>
               <div className="relative">
@@ -264,7 +264,7 @@ export const RegisterComponent = () => {
                   value={data.password}
                   onChange={handleChange}
                   type={showPassword ? "text" : "password"}
-                  className="mt-3"
+                  className="mt-2 bg-transparent border-zinc-400/30"
                 />
                 <span
                   className="absolute bottom-2 right-4 cursor-pointer"
@@ -274,7 +274,7 @@ export const RegisterComponent = () => {
                 </span>
               </div>
 
-              <Button className="w-full hover:bg-zinc-900/80 hover:translate-y-2">
+              <Button className="w-full bg-zinc-900 text-white hover:bg-zinc-900/80 hover:translate-y-2">
                 {isLoading && (
                   <CircleNotch className="mr-2 h-4 w-4 animate-spin" />
                 )}

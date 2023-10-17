@@ -95,7 +95,7 @@ export const LoginComponent = () => {
 
   return (
     <section className=" bg-[#f2f2f2] h-full lg:px-20 lg:py-10">
-      <div className="flex bg-white rounded-xl w-full h-screen lg:h-[90vh] shadow-2xl">
+      <div className="flex bg-white text-black rounded-xl w-full h-screen lg:h-[90vh] shadow-2xl">
         <div className="lg:w-1/2 flex flex-col  items-center container">
           <div className="flex justify-between w-full pt-5">
             <Link href="/">
@@ -162,12 +162,12 @@ export const LoginComponent = () => {
               </Button>
             </div>
             <form className="flex flex-col gap-5 w-80" onSubmit={handleSubmit}>
-              <div className="relative py-3">
+              <div className="relative py-3 ">
                 <div className="absolute inset-0 flex items-center">
-                  <span className="w-full border-t" />
+                  <span className="w-full border-t border-1 border-zinc-400/30" />
                 </div>
                 <div className="relative flex justify-center text-xs uppercase">
-                  <span className="bg-background px-2 text-muted-foreground">
+                  <span className="bg-white px-2 text-muted-foreground">
                     Ou continue com
                   </span>
                 </div>
@@ -185,7 +185,7 @@ export const LoginComponent = () => {
                   name="email"
                   value={data.email}
                   onChange={handleChange}
-                  className="mt-2"
+                  className="mt-2 bg-inherit border-zinc-400/30"
                 />
               </div>
               <div className="relative">
@@ -203,7 +203,7 @@ export const LoginComponent = () => {
                   value={data.password}
                   onChange={handleChange}
                   type={showPassword ? "text" : "password"}
-                  className="mt-3"
+                  className="mt-3 bg-inherit border-zinc-400/30"
                 />
                 <span
                   className="absolute bottom-2 right-4 cursor-pointer"
@@ -214,7 +214,7 @@ export const LoginComponent = () => {
               </div>
               <Button
                 disabled={isLoading}
-                className="w-full hover:bg-zinc-900/80 hover:translate-y-2 hover:transition-all"
+                className="w-full bg-zinc-950 text-white hover:bg-zinc-900/80 hover:translate-y-2 hover:transition-all"
               >
                 {isLoading && (
                   <CircleNotch className="mr-2 h-4 w-4 animate-spin" />

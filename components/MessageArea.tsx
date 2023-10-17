@@ -63,7 +63,7 @@ export const MessageArea = () => {
           </ul>
         </nav>
 
-        <div className="px-5 pt-10 w-full flex">
+        <div className="px-5 pt-10 w-full flex" id="my-msg">
           <div className="w-1/2">
             <div className="relative">
               <span className="bg-white text-black px-4 py-3 rounded-md">
