@@ -1,5 +1,7 @@
+"use client";
+
 import Image from "next/image";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import {
@@ -11,8 +13,29 @@ import {
 } from "@phosphor-icons/react";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { DotsThreeOutlineVertical } from "@phosphor-icons/react/dist/ssr/DotsThreeOutlineVertical";
+import { fetchUser } from "@/utils/fetchUser";
+import { SkeletonDemo } from "./Skeleton";
 
-export const MessageArea = () => {
+interface MessageProps {
+  userId: number;
+  name?: string;
+}
+
+export const MessageArea = ({ userId }: MessageProps) => {
+  const [userData, setUserData] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    fetchUser(userId)
+      .then((data) => {
+        setUserData(data);
+        setIsLoading(false);
+      })
+      .catch((error) => {
+        console.error("Erro ao buscar dados do usuário");
+      });
+  }, [userId]);
+
   return (
     <article className="flex flex-col justify-between w-full h-full bg-slate-300/30 dark:bg-black rounded-xl">
       <section className="hidden  flex-col h-full items-center justify-center gap-5">
@@ -44,14 +67,28 @@ export const MessageArea = () => {
       <section>
         <nav className="flex justify-between items-center rounded-t-md shadow-[-1px 5px 47px -6px rgba(230, 230, 230, 1)] bg-slate-300/30 py-3 px-5">
           <div className="flex items-center gap-3">
-            <span className="relative">
-              <Avatar className="w-12 h-12">
-                <AvatarImage src="/avatar2.jpg" />
-                <AvatarFallback></AvatarFallback>
-              </Avatar>
-              <span className="bg-green-500 rounded-full w-3 h-3 absolute top-8 left-9 border border-black " />
-            </span>
-            <p className="font-extrabold">Vitor Lima</p>
+            {!isLoading ? (
+              <>
+                <span className="relative">
+                  <Avatar className="w-12 h-12">
+                    <AvatarImage
+                      src={
+                        userData?.avatar ||
+                        userData.image ||
+                        "/avatar_default.jpeg"
+                      }
+                    />
+                    <AvatarFallback></AvatarFallback>
+                  </Avatar>
+                  <span className="bg-green-500 rounded-full w-3 h-3 absolute top-8 left-9 border border-black " />
+                </span>
+                <p className="font-extrabold">
+                  {userData ? userData.name : ""}
+                </p>
+              </>
+            ) : (
+              <SkeletonDemo />
+            )}
           </div>
           <ul className="flex gap-5">
             <li>
@@ -77,7 +114,7 @@ export const MessageArea = () => {
           <div className="w-1/2 flex justify-end mt-20">
             <div className="relative">
               <span className="bg-bgDefault text-black px-4 py-3 rounded-md">
-                Tudo certo, e você ?
+                Tudo certo!
               </span>
               <span className="absolute top-1 -right-3 rotate-180 z-20 text-bgDefault">
                 <CaretLeft size={20} weight="fill" />

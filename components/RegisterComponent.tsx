@@ -26,6 +26,7 @@ import {
 } from "./ui/select";
 import { useToast } from "./ui/use-toast";
 import { ToastAction } from "./ui/toast";
+import { normalize } from "path";
 
 interface UserRegister {
   name: string;
@@ -33,6 +34,7 @@ interface UserRegister {
   date: string;
   password: string;
   avatar: string | ArrayBuffer | null;
+  nickname: string;
 }
 
 export const RegisterComponent = () => {
@@ -47,6 +49,7 @@ export const RegisterComponent = () => {
     date: "",
     password: "",
     avatar: "",
+    nickname: "",
   });
   const { toast } = useToast();
   const [randomImage, setRandomImage] = useState<number>(0);
@@ -103,6 +106,7 @@ export const RegisterComponent = () => {
       date: "",
       password: "",
       avatar: "",
+      nickname: "",
     });
     setIsLoading(false);
   }
@@ -141,6 +145,10 @@ export const RegisterComponent = () => {
       return { ...prev, [e.target.name]: e.target.value };
     });
   };
+
+  function removeDiacritics(str: string) {
+    return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+  }
 
   console.log(data);
 
@@ -191,11 +199,14 @@ export const RegisterComponent = () => {
             </Avatar>
             <button
               onClick={handleAddPhotoClick}
-              className="absolute top-[140px] lg:top-[175px] "
+              className="absolute top-[100px] lg:top-[160px] "
             >
               <UserCirclePlus size={32} />
             </button>
-            <form onSubmit={handleSubmit} className="flex flex-col gap-5 w-80">
+            <form
+              onSubmit={handleSubmit}
+              className="flex flex-col gap-5 w-80 pt-10"
+            >
               <Input
                 id="avatar"
                 type="file"
@@ -205,17 +216,48 @@ export const RegisterComponent = () => {
                 onChange={handleAvatarChange}
               />
               <div>
-                <label htmlFor="">Nome</label>
-                <Input
-                  id="name"
-                  name="name"
-                  placeholder="Nome"
-                  type="text"
-                  disabled={isLoading}
-                  value={data.name}
-                  onChange={handleChange}
-                  className="mt-2 bg-transparent border-zinc-400/30"
-                />
+                <div className="flex items-center justify-center gap-2">
+                  <div>
+                    <label htmlFor="">Nome</label>
+                    <Input
+                      id="name"
+                      name="name"
+                      placeholder="Nome"
+                      type="text"
+                      disabled={isLoading}
+                      value={data.name}
+                      onChange={(e) => {
+                        const name = e.target.value;
+                        const lowerCaseNick = removeDiacritics(name)
+                          .toLocaleLowerCase()
+                          .replace(/\s/g, "");
+                        const randomNumbers = Math.floor(
+                          1000 + Math.random() * 9000
+                        );
+                        const nickname = `@${lowerCaseNick.slice(
+                          0,
+                          9
+                        )}${randomNumbers}`;
+                        setData((prevData) => ({
+                          ...prevData,
+                          name,
+                          nickname,
+                        }));
+                      }}
+                      className="mt-2 bg-transparent border-zinc-400/30"
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="">Nickname</label>
+                    <Input
+                      id="nickname"
+                      className="w-32 mt-2 bg-transparent border-zinc-400/30"
+                      placeholder="@nick"
+                      disabled
+                      value={data.nickname}
+                    />
+                  </div>
+                </div>
               </div>
               <div>
                 <label htmlFor="" className="">

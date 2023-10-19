@@ -150,10 +150,10 @@ export const LoginComponent = () => {
               </Button>
               <Button
                 onClick={() => signIn("github", { callbackUrl: "/chat" })}
-                className="flex w-80 lg:w-52 items-center hover:translate-y-2 gap-2 bg-transparent hover:bg-slate-300/30 transition text-textPrimary border border-neutral-800/20 hover:transition-all"
+                className="flex w-80 bg-zinc-900 hover:bg-zinc-900/80 text-white lg:w-52 items-center hover:translate-y-2 gap-2 transition  border border-neutral-800/20 hover:transition-all"
               >
                 <Image
-                  src="github-light.svg"
+                  src="github.svg"
                   width={20}
                   height={30}
                   alt="icon facebook"
