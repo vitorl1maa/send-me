@@ -15,14 +15,23 @@ import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { DotsThreeOutlineVertical } from "@phosphor-icons/react/dist/ssr/DotsThreeOutlineVertical";
 import { fetchUser } from "@/utils/fetchUser";
 import { SkeletonDemo } from "./Skeleton";
+import { getMessages } from "@/utils/getMessages";
+import { Skeleton } from "./ui/skeleton";
 
 interface MessageProps {
   userId: number;
+  senderId: number;
   name?: string;
 }
 
-export const MessageArea = ({ userId }: MessageProps) => {
+interface Message {
+  id: number;
+  content: string;
+}
+
+export const MessageArea = ({ userId, senderId }: MessageProps) => {
   const [userData, setUserData] = useState<any>(null);
+  const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -32,9 +41,22 @@ export const MessageArea = ({ userId }: MessageProps) => {
         setIsLoading(false);
       })
       .catch((error) => {
-        console.error("Erro ao buscar dados do usuário");
+        console.error("Erro ao buscar dados do usuário", error);
       });
-  }, [userId]);
+
+    async function fetchMessages() {
+      try {
+        const userData = await getMessages(senderId);
+        if (userData) {
+          setMessages(userData);
+          setIsLoading(true);
+        }
+      } catch (error) {
+        console.error("Erro ao buscar mensagens:", error);
+      }
+    }
+    fetchMessages();
+  }, [userId, senderId]);
 
   return (
     <article className="flex flex-col justify-between w-full h-full bg-slate-300/30 dark:bg-black rounded-xl">
@@ -103,23 +125,30 @@ export const MessageArea = ({ userId }: MessageProps) => {
         <div className="px-5 pt-10 w-full flex" id="my-msg">
           <div className="w-1/2">
             <div className="relative">
-              <span className="bg-white text-black px-4 py-3 rounded-md">
+              <span className="bg-white text-black px-4 py-3 rounded-full rounded-bl-xl">
                 Bom dia, tudo bem ?
-              </span>
-              <span className="absolute top-1 -left-3 z-20 text-white">
-                <CaretLeft size={20} weight="fill" />
               </span>
             </div>
           </div>
           <div className="w-1/2 flex justify-end mt-20">
-            <div className="relative">
-              <span className="bg-bgDefault text-black px-4 py-3 rounded-md">
-                Tudo certo!
-              </span>
-              <span className="absolute top-1 -right-3 rotate-180 z-20 text-bgDefault">
-                <CaretLeft size={20} weight="fill" />
-              </span>
-            </div>
+            {!isLoading ? (
+              <>
+                <div className="flex flex-col gap-4">
+                  {messages.map((message) => (
+                    <span
+                      className="bg-bgDefault text-black px-4 py-3 rounded-full rounded-br-xl"
+                      key={message.id}
+                    >
+                      {message.content}
+                    </span>
+                  ))}
+                </div>
+              </>
+            ) : (
+              <>
+                <Skeleton className="h-12 w-36 rounded-full rounded-br-xl mt-2 bg-slate-300 dark:bg-muted" />
+              </>
+            )}
           </div>
         </div>
       </section>

@@ -19,6 +19,7 @@ import { MessageArea } from "./MessageArea";
 import { useTheme } from "next-themes";
 import { ButtonFullScreen } from "./ButtonFullScreen";
 import { SkeletonDemo } from "./Skeleton";
+import { getUsers } from "@/utils/getUsers";
 
 interface UserData {
   name: string;
@@ -28,13 +29,19 @@ interface UserData {
   nickname: string;
 }
 
-export default function ChatComponent() {
+interface ChatProps {
+  senderId: number;
+}
+
+export default function ChatComponent({ senderId }: ChatProps) {
   const { data: session, status } = useSession();
   const { setTheme } = useTheme();
   const positionRef = useRef<HTMLDivElement | null>(null);
   const [userData, setUserData] = useState<UserData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const userId = session?.user?.id;
+  const [searchTerm, setSearchTerm] = useState("");
+  const [foundUser, setFoundUser] = useState(null);
 
   const Chatposition = () => {
     if (positionRef.current) {
@@ -65,6 +72,31 @@ export default function ChatComponent() {
     return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
   }
 
+  const handleSearch = async () => {
+    try {
+      const users = await getUsers(); // Busque todos os usuários (pode personalizar isso)
+      const user = users.find(
+        (u: any) => u.nickname === searchTerm || u.email === searchTerm
+      );
+
+      if (user) {
+        setFoundUser(user); // Defina o usuário encontrado no estado
+        console.log("Nome do usuário encontrado", user.name);
+      } else {
+        console.log("Usuário não encontrado");
+        setFoundUser(null); // Limpe o estado se o usuário não for encontrado
+      }
+    } catch (error) {
+      console.error("Erro ao buscar usários:", error);
+    }
+  };
+
+  const handleKeyUp = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      handleSearch();
+    }
+  };
+
   return (
     <React.Fragment>
       {session && (
@@ -89,10 +121,15 @@ export default function ChatComponent() {
               <div className="flex flex-col gap-3">
                 <h1 className="text-xl font-extrabold">Chat</h1>
                 <div className="relative">
+                  <Input
+                    className="rounded-full"
+                    placeholder="Buscar..."
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    onKeyUp={handleKeyUp}
+                  />
                   <button className="absolute top-2 right-3 bg-inherit">
-                    <MagnifyingGlass size={22} />
+                    <MagnifyingGlass size={22} onClick={handleSearch} />
                   </button>
-                  <Input className="rounded-full" placeholder="Buscar..." />
                 </div>
                 <div className="flex flex-col justify-center bg-slate-300/20 h-20 w-52 rounded-md p-2 cursor-pointer">
                   <span className="flex items-center gap-3 relative">
@@ -248,7 +285,10 @@ export default function ChatComponent() {
             </article>
           </>
           {session && userId && (
-            <MessageArea userId={parseInt(userId as string)} />
+            <MessageArea
+              userId={parseInt(userId as string)}
+              senderId={senderId}
+            />
           )}
         </section>
       )}

@@ -9,7 +9,9 @@ export async function GET(
 
     const userMessages = await prisma.message.findMany({
       where: {
-        senderId: senderId,
+        senderId: {
+          equals: senderId,
+        },
       },
     });
 
