@@ -29,7 +29,7 @@ interface Message {
   content: string;
 }
 
-export const MessageArea = ({ userId, senderId }: MessageProps) => {
+export const MessageArea = ({ userId }: MessageProps) => {
   const [userData, setUserData] = useState<any>(null);
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -44,19 +44,25 @@ export const MessageArea = ({ userId, senderId }: MessageProps) => {
         console.error("Erro ao buscar dados do usuário", error);
       });
 
-    async function fetchMessages() {
+    async function fetchData() {
       try {
-        const userData = await getMessages(senderId);
-        if (userData) {
-          setMessages(userData);
-          setIsLoading(true);
+        const userResponse = await fetchUser(userId);
+        setUserData(userResponse);
+
+        if (userResponse && userResponse.id) {
+          // Por exemplo, se o senderId é o ID do usuário.
+          const messagesData = await getMessages(userResponse.id);
+          setMessages(messagesData);
         }
       } catch (error) {
-        console.error("Erro ao buscar mensagens:", error);
+        console.error("Erro ao buscar dados:", error);
+      } finally {
+        setIsLoading(false);
       }
     }
-    fetchMessages();
-  }, [userId, senderId]);
+
+    fetchData();
+  }, [userId]);
 
   return (
     <article className="flex flex-col justify-between w-full h-full bg-slate-300/30 dark:bg-black rounded-xl">

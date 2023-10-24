@@ -1,13 +1,13 @@
-export async function getMessages(senderId: number) {
+export async function getMessages(userId: number) {
   try {
-    const res = await fetch(`/api/messages?senderId=${senderId}`);
+    const res = await fetch(`/api/messages?userId=${userId}`);
     if (!res.ok) {
-      throw new Error("Erro ao buscar usúario");
+      throw new Error("Erro ao buscar mensagens");
     }
-    const userData = await res.json();
-    return userData;
+    const messages = await res.json();
+    return messages;
   } catch (error) {
     console.error(error);
-    return;
+    return [];
   }
 }

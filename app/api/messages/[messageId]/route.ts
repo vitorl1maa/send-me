@@ -8,11 +8,7 @@ export async function GET(
     const senderId = Number(context.params.senderId);
 
     const userMessages = await prisma.message.findMany({
-      where: {
-        senderId: {
-          equals: senderId,
-        },
-      },
+      where: { id: senderId },
     });
 
     if (!userMessages || userMessages.length === 0) {
@@ -26,12 +22,10 @@ export async function GET(
   } catch (error) {
     console.error("Erro ao buscar mensagens:", error);
     return new Response(
-      JSON.stringify({ message: "Erro ao buscar mensagens" }),
+      JSON.stringify({ message: "Error when fetching messages" }),
       {
         status: 500,
       }
     );
-  } finally {
-    await prisma.$disconnect();
   }
 }

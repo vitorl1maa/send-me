@@ -58,5 +58,5 @@ model Message {
   content   String
   imageUrl  String?
   createdAt DateTime @default(now())
-  sender    User     @relation(fields: [senderId], references: [id])
+  user      User     @relation(fields: [senderId], references: [id])
 }
