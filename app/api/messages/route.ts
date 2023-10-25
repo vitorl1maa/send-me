@@ -14,7 +14,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
       data: {
         content,
         imageUrl,
-        senderId: userId,
+        userId,
       },
     });
 

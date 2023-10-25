@@ -2,13 +2,14 @@ import { db as prisma } from "@/lib/db";
 
 export async function GET(
   request: Request,
-  context: { params: { senderId: number } }
+  context: { params: { userId: number } }
 ) {
   try {
-    const senderId = Number(context.params.senderId);
+    const userId = Number(context.params.userId);
 
+    // Correção: Filtrar mensagens usando 'userId' em vez de 'id'
     const userMessages = await prisma.message.findMany({
-      where: { id: senderId },
+      where: { userId: userId },
     });
 
     if (!userMessages || userMessages.length === 0) {

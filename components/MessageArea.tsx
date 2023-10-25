@@ -17,10 +17,10 @@ import { fetchUser } from "@/utils/fetchUser";
 import { SkeletonDemo } from "./Skeleton";
 import { getMessages } from "@/utils/getMessages";
 import { Skeleton } from "./ui/skeleton";
+import { postMessages } from "@/utils/postMessages";
 
 interface MessageProps {
   userId: number;
-  senderId: number;
   name?: string;
 }
 
@@ -31,41 +31,60 @@ interface Message {
 
 export const MessageArea = ({ userId }: MessageProps) => {
   const [userData, setUserData] = useState<any>(null);
-  const [messages, setMessages] = useState<Message[]>([]);
+  const [userMessages, setUserMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [messages, setMessages] = useState("");
 
   useEffect(() => {
-    fetchUser(userId)
-      .then((data) => {
-        setUserData(data);
-        setIsLoading(false);
-      })
-      .catch((error) => {
-        console.error("Erro ao buscar dados do usuário", error);
-      });
-
-    async function fetchData() {
+    const fetchData = async () => {
       try {
-        const userResponse = await fetchUser(userId);
-        setUserData(userResponse);
+        // Obtenha o userId da sessão (substitua pelo método correto de obtenção do userId da sessão)
+        const sessionUserId = userId;
 
-        if (userResponse && userResponse.id) {
-          // Por exemplo, se o senderId é o ID do usuário.
-          const messagesData = await getMessages(userResponse.id);
-          setMessages(messagesData);
-        }
+        const user = await fetchUser(sessionUserId);
+        setUserData(user);
+
+        // Buscando todas as mensagens
+        const allMessages = await getMessages(userId);
+        setUserMessages(allMessages);
+        setIsLoading(false);
+
+        // Filtrando as mensagens do usuário da sessão
+        const sessionUserMessages = allMessages.filter(
+          (message: any) => message.userId === sessionUserId
+        );
+
+        // Armazenando as mensagens no estado
+        setUserMessages(sessionUserMessages);
       } catch (error) {
-        console.error("Erro ao buscar dados:", error);
+        console.error("Erro ao buscar dados do usuário", error);
       } finally {
         setIsLoading(false);
       }
-    }
+    };
 
     fetchData();
-  }, [userId]);
+  }, []);
+
+  const handleMessages = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setMessages(e.target.value);
+  };
+
+  const handleSubmit = async (e: React.SyntheticEvent) => {
+    e.preventDefault();
+
+    try {
+      const newMessage = await postMessages(messages, userId);
+      setUserMessages((prevMessages) => [...prevMessages, newMessage]);
+    } catch (error) {
+      console.error("Erro ao enviar a mensagem:", error);
+    }
+
+    setMessages("");
+  };
 
   return (
-    <article className="flex flex-col justify-between w-full h-full bg-slate-300/30 dark:bg-black rounded-xl">
+    <article className="flex flex-col justify-between w-full h-full bg-slate-300/30 dark:bg-black rounded-xl ">
       <section className="hidden  flex-col h-full items-center justify-center gap-5">
         <div className="flex flex-col h-full items-center justify-center gap-5">
           <Image
@@ -102,7 +121,7 @@ export const MessageArea = ({ userId }: MessageProps) => {
                     <AvatarImage
                       src={
                         userData?.avatar ||
-                        userData.image ||
+                        userData?.image ||
                         "/avatar_default.jpeg"
                       }
                     />
@@ -140,7 +159,7 @@ export const MessageArea = ({ userId }: MessageProps) => {
             {!isLoading ? (
               <>
                 <div className="flex flex-col gap-4">
-                  {messages.map((message) => (
+                  {userMessages.map((message) => (
                     <span
                       className="bg-bgDefault text-black px-4 py-3 rounded-full rounded-br-xl"
                       key={message.id}
@@ -159,8 +178,17 @@ export const MessageArea = ({ userId }: MessageProps) => {
         </div>
       </section>
       <section>
-        <div className="w-full pb-10 px-8 flex gap-5 items-center justify-center">
-          <Input placeholder="Mensagem..." className="h-12" />
+        <form
+          className="w-full pb-10 px-8 flex gap-5 items-center justify-center"
+          onSubmit={handleSubmit}
+        >
+          <Input
+            placeholder="Mensagem..."
+            type="text"
+            name="message"
+            value={messages}
+            onChange={handleMessages}
+          />
 
           <span className="cursor-pointer hover:translate-y-2 transition-all">
             <Paperclip size={27} className="text-black dark:text-white" />
@@ -171,9 +199,9 @@ export const MessageArea = ({ userId }: MessageProps) => {
           </span>
 
           <Button className="bg-bgDefault hover:bg-bgDefault/30 hover:translate-y-2 transition-all">
-            <PaperPlaneTilt size={27} />
+            <PaperPlaneTilt size={27} weight="fill" />
           </Button>
-        </div>
+        </form>
       </section>
     </article>
   );

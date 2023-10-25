@@ -54,9 +54,9 @@ model User {
 
 model Message {
   id        Int      @id @default(autoincrement())
-  senderId  Int
-  content   String
+  userId    Int
+  content   String?
   imageUrl  String?
   createdAt DateTime @default(now())
-  user      User     @relation(fields: [senderId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
 }

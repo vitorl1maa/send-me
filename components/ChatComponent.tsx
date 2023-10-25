@@ -31,7 +31,7 @@ interface UserData {
 }
 
 interface ChatProps {
-  senderId: number;
+  name: string;
 }
 
 export default function ChatComponent() {

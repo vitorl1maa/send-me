@@ -4,7 +4,7 @@ import bcrypt from "bcrypt";
 
 export async function POST(req: NextRequest) {
   const data = await req.json();
-  const { name, nickname, email, date, password, avatar } = data;
+  const { name, nickname, email, date, password, avatar, messages } = data;
 
   if (!name || !email || !password) {
     return NextResponse.json("Dados inválidos.", { status: 400 });
