@@ -21,6 +21,7 @@ import { ButtonFullScreen } from "./ButtonFullScreen";
 import { SkeletonDemo } from "./Skeleton";
 import { getUsers } from "@/utils/getUsers";
 import { Button } from "./ui/button";
+import { UserCard } from "./UserCard";
 
 interface UserData {
   name: string;
@@ -43,7 +44,7 @@ export default function ChatComponent() {
   const userId = session?.user?.id;
   const [searchTerm, setSearchTerm] = useState("");
   const [foundUser, setFoundUser] = useState(null);
-  const [showContact, setShowConatact] = useState(false);
+  const [contacts, setContacts] = useState<UserData[]>([]);
 
   const Chatposition = () => {
     if (positionRef.current) {
@@ -99,7 +100,16 @@ export default function ChatComponent() {
     }
   };
 
-  const handleAddUser = () => {};
+  const handleAddUser = () => {
+    if (foundUser) {
+      // Verifica se o usuário já está na lista de contatos
+      if (!contacts.find((contact) => contact.email === foundUser.email)) {
+        setContacts((prevContacts) => [...prevContacts, foundUser]);
+      }
+    }
+
+    setFoundUser(null);
+  };
 
   return (
     <React.Fragment>
@@ -149,36 +159,22 @@ export default function ChatComponent() {
                   {!foundUser ? (
                     ""
                   ) : (
-                    <button className="bg-green-500/30 text-green-500  rounded-md text-xs py-2 px-3 ">
+                    <button
+                      className="bg-green-500/30 text-green-500  rounded-md text-xs py-2 px-3 "
+                      onClick={handleAddUser}
+                    >
                       Adcionar
                     </button>
                   )}
                 </div>
-                {/* 
-                <div className="flex flex-col justify-center bg-slate-300/20 h-20 w-52 rounded-md p-2 cursor-pointer">
-                  <span className="flex items-center gap-3 relative">
-                    <Avatar className="w-12 h-12">
-                      <AvatarImage src={userData.} />
-                      <AvatarFallback></AvatarFallback>
-                    </Avatar>
-                    <span className="bg-green-500 rounded-full w-3 h-3 absolute top-8 left-9 border border-black " />
-                    <div className="flex flex-col justify-center relative w-full">
-                      <div className="flex justify-between">
-                        <strong>Vitor Lima</strong>
-                        <span className="text-xs">19:00</span>
-                      </div>
-                      <div className="flex items-center justify-between w-full">
-                        <span className="text-xs">Vamos almo...</span>
-                        <span className="pr-1">
-                          <ChatCircleText size={25} />
-                        </span>
-                      </div>
-                      <span className="absolute top-5 left-28 bg-bgDefault w-[22px] h-[22px] text-center text-white rounded-full">
-                        3
-                      </span>
-                    </div>
-                  </span>
-                </div> */}
+                {contacts.length > 0 && (
+                  <div className="contacts-list">
+                    <h2>Amigos:</h2>
+                    {contacts.map((contact) => (
+                      <UserCard key={contact.email} userData={contact} />
+                    ))}
+                  </div>
+                )}
               </div>
 
               {/* <ul className="flex flex-col gap-5 pt-10">

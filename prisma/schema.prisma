@@ -50,6 +50,7 @@ model User {
   accounts       Account[]
   sessions       Session[]
   message        Message[]
+  contact        Contact[]
 }
 
 model Message {
@@ -59,4 +60,15 @@ model Message {
   imageUrl  String?
   createdAt DateTime @default(now())
   user      User     @relation(fields: [userId], references: [id])
+}
+
+model Contact {
+  id        Int      @id @default(autoincrement())
+  name      String?
+  email     String?
+  avatar    String?
+  nickname  String?
+  userId    Int
+  createdAt DateTime @default(now())
+  User      User     @relation(fields: [userId], references: [id])
 }
