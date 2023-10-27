@@ -65,9 +65,9 @@ model Message {
 model Contact {
   id        Int      @id @default(autoincrement())
   name      String?
+  nickname  String?
   email     String?
   avatar    String?
-  nickname  String?
   userId    Int
   createdAt DateTime @default(now())
   User      User     @relation(fields: [userId], references: [id])

@@ -6,6 +6,7 @@ import { ChatCircleText } from "@phosphor-icons/react";
 import { UserData } from "next-auth/providers/42-school";
 
 interface UserCardProps {
+  id: number;
   userData: UserData;
   name: string;
   image: string;
@@ -30,7 +31,7 @@ export const UserCard = ({ userData }: UserCardProps) => {
         <span className="bg-green-500 rounded-full w-3 h-3 absolute top-8 left-9 border border-black " />
         <div className="flex flex-col justify-center relative w-full">
           <div className="flex justify-between">
-            <strong>Vitor Lima</strong>
+            <strong>{userData?.name}</strong>
             <span className="text-xs">19:00</span>
           </div>
           <div className="flex items-center justify-between w-full">

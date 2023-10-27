@@ -29,8 +29,6 @@ export async function GET(
     return new Response(JSON.stringify({ message: "Erro ao buscar usuário" }), {
       status: 500,
     });
-  } finally {
-    await prisma.$disconnect();
   }
 }
 

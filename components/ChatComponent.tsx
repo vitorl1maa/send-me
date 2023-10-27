@@ -22,8 +22,11 @@ import { SkeletonDemo } from "./Skeleton";
 import { getUsers } from "@/utils/getUsers";
 import { Button } from "./ui/button";
 import { UserCard } from "./UserCard";
+import { postContacts } from "@/utils/postContacts";
+import { getContactsId } from "@/utils/getContactsId";
 
 interface UserData {
+  id: number;
   name: string;
   image: string;
   email: string;
@@ -43,8 +46,9 @@ export default function ChatComponent() {
   const [isLoading, setIsLoading] = useState(true);
   const userId = session?.user?.id;
   const [searchTerm, setSearchTerm] = useState("");
-  const [foundUser, setFoundUser] = useState(null);
+  const [foundUser, setFoundUser] = useState<UserData | null>(null);
   const [contacts, setContacts] = useState<UserData[]>([]);
+  const sessionUserId = session?.user?.id;
 
   const Chatposition = () => {
     if (positionRef.current) {
@@ -68,8 +72,22 @@ export default function ChatComponent() {
             console.error("Erro ao buscar usuário", error);
           });
       }
+
+      getContactsId(sessionUserId)
+        .then((contacts) => {
+          // Filtrar os contatos com base no userId da sessão
+          const sessionUserContacts = contacts.filter(
+            (contact) => contact.userId === sessionUserId
+          );
+
+          // Armazenar os contatos filtrados no estado
+          setContacts(sessionUserContacts);
+        })
+        .catch((error) => {
+          console.error("Erro ao buscar contatos:", error);
+        });
     }
-  }, [session]);
+  }, [session, sessionUserId]);
 
   function normalize(str: string) {
     return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
@@ -100,15 +118,28 @@ export default function ChatComponent() {
     }
   };
 
-  const handleAddUser = () => {
+  const handleAddUser = async () => {
     if (foundUser) {
       // Verifica se o usuário já está na lista de contatos
-      if (!contacts.find((contact) => contact.email === foundUser.email)) {
+      if (
+        !contacts.find((contact) => contact.nickname === foundUser.nickname)
+      ) {
         setContacts((prevContacts) => [...prevContacts, foundUser]);
       }
-    }
 
-    setFoundUser(null);
+      try {
+        await postContacts(
+          foundUser.name,
+          foundUser.avatar,
+          foundUser.nickname,
+          foundUser.email,
+          userId
+        );
+      } catch (error) {
+        console.error("Erro ao adcionar o contato na lista");
+      }
+      setFoundUser(null);
+    }
   };
 
   return (
@@ -168,10 +199,9 @@ export default function ChatComponent() {
                   )}
                 </div>
                 {contacts.length > 0 && (
-                  <div className="contacts-list">
-                    <h2>Amigos:</h2>
+                  <div className="flex flex-col gap-3">
                     {contacts.map((contact) => (
-                      <UserCard key={contact.email} userData={contact} />
+                      <UserCard key={contact.id} userData={contact} />
                     ))}
                   </div>
                 )}
