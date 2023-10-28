@@ -5,6 +5,7 @@ import { useSession, signOut } from "next-auth/react";
 import Link from "next/link";
 import {
   ChatCircleText,
+  CircleNotch,
   CornersOut,
   MagnifyingGlass,
   Moon,
@@ -48,7 +49,6 @@ export default function ChatComponent() {
   const [searchTerm, setSearchTerm] = useState("");
   const [foundUser, setFoundUser] = useState<UserData | null>(null);
   const [contacts, setContacts] = useState<UserData[]>([]);
-  const sessionUserId = session?.user?.id;
 
   const Chatposition = () => {
     if (positionRef.current) {
@@ -73,21 +73,25 @@ export default function ChatComponent() {
           });
       }
 
-      getContactsId(sessionUserId)
-        .then((contacts) => {
-          // Filtrar os contatos com base no userId da sessão
-          const sessionUserContacts = contacts.filter(
-            (contact) => contact.userId === sessionUserId
-          );
+      const sessionUserId = session?.user?.id;
+      if (sessionUserId !== undefined) {
+        const sessionId = parseInt(sessionUserId);
+        getContactsId(sessionId)
+          .then((contacts) => {
+            // Filtrar os contatos com base no userId da sessão
+            const sessionUserContacts = contacts.filter(
+              (contact: any) => contact.userId === sessionId
+            );
 
-          // Armazenar os contatos filtrados no estado
-          setContacts(sessionUserContacts);
-        })
-        .catch((error) => {
-          console.error("Erro ao buscar contatos:", error);
-        });
+            // Armazenar os contatos filtrados no estado
+            setContacts(sessionUserContacts);
+          })
+          .catch((error) => {
+            console.error("Erro ao buscar contatos:", error);
+          });
+      }
     }
-  }, [session, sessionUserId]);
+  }, [session]);
 
   function normalize(str: string) {
     return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
@@ -128,13 +132,18 @@ export default function ChatComponent() {
       }
 
       try {
-        await postContacts(
-          foundUser.name,
-          foundUser.avatar,
-          foundUser.nickname,
-          foundUser.email,
-          userId
-        );
+        if (userId !== undefined) {
+          const userIdNumber = parseInt(userId);
+          if (!isNaN(userIdNumber)) {
+            await postContacts(
+              foundUser.name,
+              foundUser.avatar,
+              foundUser.nickname,
+              foundUser.email,
+              userIdNumber
+            );
+          }
+        }
       } catch (error) {
         console.error("Erro ao adcionar o contato na lista");
       }
@@ -178,25 +187,31 @@ export default function ChatComponent() {
                 </div>
 
                 <div className="flex gap-2 justify-center items-center ">
-                  <p
-                    className={`text-xs ${
-                      !foundUser
-                        ? ""
-                        : "text-xs bg-bgDefault/30 py-2 px-3 rounded-md"
-                    } py-2 px-3 rounded-md`}
-                  >
-                    {foundUser?.name}
-                  </p>
-                  {!foundUser ? (
-                    ""
-                  ) : (
-                    <button
-                      className="bg-green-500/30 text-green-500  rounded-md text-xs py-2 px-3 "
-                      onClick={handleAddUser}
-                    >
-                      Adcionar
-                    </button>
-                  )}
+                  <>
+                    {isLoading ? (
+                      <CircleNotch className="mr-2 h-10 w-10 animate-spin" />
+                    ) : (
+                      <p
+                        className={`text-xs ${
+                          !foundUser
+                            ? ""
+                            : "text-xs bg-bgDefault/30 py-2 px-3 rounded-md"
+                        } py-2 px-3 rounded-md`}
+                      >
+                        {foundUser?.name}
+                      </p>
+                    )}
+                    {!foundUser ? (
+                      ""
+                    ) : (
+                      <button
+                        className="bg-green-500/30 text-green-500  rounded-md text-xs py-2 px-3 "
+                        onClick={handleAddUser}
+                      >
+                        Adcionar
+                      </button>
+                    )}
+                  </>
                 </div>
                 {contacts.length > 0 && (
                   <div className="flex flex-col gap-3">

@@ -135,43 +135,7 @@ export const LoginComponent = () => {
             <p className="py-5 text-lg">
               Converse, conecte-se e compartilhe com o mundo!
             </p>
-            <div className="flex flex-col lg:flex-row gap-2">
-              <Button
-                onClick={() => signIn("google", { callbackUrl: "/chat" })}
-                className="flex w-80 lg:w-52 items-center hover:translate-y-2 gap-2 bg-transparent hover:bg-slate-300/30 transition text-textPrimary border border-neutral-800/20 hover:transition-all"
-              >
-                <Image
-                  src="google (1).svg"
-                  width={20}
-                  height={30}
-                  alt="icon google"
-                />
-                Entrar com Google
-              </Button>
-              <Button
-                onClick={() => signIn("github", { callbackUrl: "/chat" })}
-                className="flex w-80 bg-zinc-900 hover:bg-zinc-900/80 text-white lg:w-52 items-center hover:translate-y-2 gap-2 transition  border border-neutral-800/20 hover:transition-all"
-              >
-                <Image
-                  src="github.svg"
-                  width={20}
-                  height={30}
-                  alt="icon facebook"
-                />
-                Entrar com GitHub
-              </Button>
-            </div>
             <form className="flex flex-col gap-5 w-80" onSubmit={handleSubmit}>
-              <div className="relative py-3 ">
-                <div className="absolute inset-0 flex items-center">
-                  <span className="w-full border-t border-1 border-zinc-400/30" />
-                </div>
-                <div className="relative flex justify-center text-xs uppercase">
-                  <span className="bg-white px-2 text-muted-foreground">
-                    Ou continue com
-                  </span>
-                </div>
-              </div>
               <div>
                 <label htmlFor="">Email</label>
                 <Input

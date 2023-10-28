@@ -3,22 +3,22 @@
 import React from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { ChatCircleText } from "@phosphor-icons/react";
-import { UserData } from "next-auth/providers/42-school";
+
+interface UserData {
+  avatar: string;
+  image: string;
+  name: string;
+}
 
 interface UserCardProps {
-  id: number;
   userData: UserData;
-  name: string;
-  image: string;
-  email: string;
-  avatar: string;
-  nickname: string;
 }
 
 export const UserCard = ({ userData }: UserCardProps) => {
-  if (!userData) {
-    return <></>;
-  }
+  const sliceName =
+    userData?.name.length > 9
+      ? userData.name.slice(0, 9) + "..."
+      : userData.name;
   return (
     <div className="flex flex-col justify-center bg-slate-300/20 h-20 w-52 rounded-md p-2 cursor-pointer">
       <span className="flex items-center gap-3 relative">
@@ -31,7 +31,7 @@ export const UserCard = ({ userData }: UserCardProps) => {
         <span className="bg-green-500 rounded-full w-3 h-3 absolute top-8 left-9 border border-black " />
         <div className="flex flex-col justify-center relative w-full">
           <div className="flex justify-between">
-            <strong>{userData?.name}</strong>
+            <strong>{sliceName}</strong>
             <span className="text-xs">19:00</span>
           </div>
           <div className="flex items-center justify-between w-full">
