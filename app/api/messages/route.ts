@@ -29,7 +29,7 @@ export async function GET() {
   try {
     const messages = await prisma.message.findMany({
       orderBy: {
-        createdAt: "desc",
+        createdAt: "asc",
       },
       take: 50, // Limite para as 50 mensagens mais recentes, por exemplo.
     });
