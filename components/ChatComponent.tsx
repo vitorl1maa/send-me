@@ -258,12 +258,7 @@ export default function ChatComponent() {
                       <div className="flex flex-col justify-center">
                         <strong>{userData ? userData?.name : ""} </strong>
                         <span className="text-xs">
-                          {userData
-                            ? userData?.nickname ||
-                              `@${normalize(
-                                userData?.email.slice(0, 9)
-                              ).toLowerCase()}`
-                            : ""}
+                          {userData ? userData?.nickname : ""}
                         </span>
                       </div>
                     </span>

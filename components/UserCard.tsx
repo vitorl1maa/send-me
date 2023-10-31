@@ -3,8 +3,10 @@
 import React from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { ChatCircleText } from "@phosphor-icons/react";
+import { MessageArea } from "./MessageArea";
 
 interface UserData {
+  id: number;
   avatar: string;
   image: string;
   name: string;
@@ -19,8 +21,17 @@ export const UserCard = ({ userData }: UserCardProps) => {
     userData?.name.length > 9
       ? userData.name.slice(0, 9) + "..."
       : userData.name;
+
+  const handleUserCardClick = () => {
+    // Chame uma função para abrir o bate-papo com o usuário clicado
+    MessageArea.openChatWithUser(userData.id, userData.name);
+  };
+
   return (
-    <div className="flex flex-col justify-center bg-slate-300/20 h-20 w-52 rounded-md p-2 cursor-pointer">
+    <div
+      className="flex flex-col justify-center bg-slate-300/20 h-20 w-52 rounded-md p-2 cursor-pointer"
+      onClick={handleUserCardClick}
+    >
       <span className="flex items-center gap-3 relative">
         <Avatar className="w-12 h-12">
           <AvatarImage
@@ -32,7 +43,7 @@ export const UserCard = ({ userData }: UserCardProps) => {
         <div className="flex flex-col justify-center relative w-full">
           <div className="flex justify-between">
             <strong>{sliceName}</strong>
-            <span className="text-xs">19:00</span>
+            <span className="text-xs">Sex • 27</span>
           </div>
           <div className="flex items-center justify-between w-full">
             <span className="text-xs">Vamos almo...</span>

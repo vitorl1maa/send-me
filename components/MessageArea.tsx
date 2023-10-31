@@ -43,6 +43,17 @@ export const MessageArea = ({ userId }: MessageProps) => {
   const [isLoading, setIsLoading] = useState(true);
   const [messages, setMessages] = useState("");
   const [showEmoji, setShowEmoji] = useState(false);
+  const [selectedUser, setSelectedUser] = useState<{
+    id: number;
+    name: string;
+  } | null>(null);
+
+  // Função para abrir o bate-papo com o usuário
+  const openChatWithUser = (userId: number, userName: string) => {
+    // Lógica para abrir o bate-papo com o usuário
+    // Pode incluir carregar mensagens relacionadas a esse usuário
+    setSelectedUser({ id: userId, name: userName });
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -108,7 +119,7 @@ export const MessageArea = ({ userId }: MessageProps) => {
 
   return (
     <article className="flex flex-col justify-between w-full h-full bg-slate-300/30 dark:bg-black rounded-xl ">
-      <section className="hidden  flex-col h-full items-center justify-center gap-5">
+      <section className="hidden flex-col h-full items-center justify-center gap-5">
         <div className="flex flex-col h-full items-center justify-center gap-5">
           <Image
             src="/message-wallpaper.png"
@@ -116,28 +127,7 @@ export const MessageArea = ({ userId }: MessageProps) => {
             height={400}
             alt="ilustração 3D"
           />
-          <h1 className="text-xl font-extrabold">Uauu, que vazio...</h1>
-        </div>
-        <div className="w-full pb-10 px-8 flex gap-5 items-center justify-center">
-          <Input placeholder="Mensagem..." className="h-12" type="text" />
-
-          <span className="cursor-pointer hover:translate-y-2 transition-all">
-            <Paperclip size={27} className="text-black dark:text-white" />
-          </span>
-
-          <span className="cursor-pointer hover:translate-y-2 transition-all">
-            <Smiley size={27} className="text-black dark:text-white" />
-          </span>
-
-          <Button
-            className={`${
-              messages === ""
-                ? "hidden"
-                : "bg-bgDefault hover:bg-bgDefault/30 hover:translate-y-2 transition-all"
-            }`}
-          >
-            <PaperPlaneTilt size={27} weight="fill" />
-          </Button>
+          <h1 className="text-xl font-extrabold">Uauu, que vazio!</h1>
         </div>
       </section>
       <section className="max-h-[850px] overflow-y-auto">
@@ -158,9 +148,11 @@ export const MessageArea = ({ userId }: MessageProps) => {
                   </Avatar>
                   <span className="bg-green-500 rounded-full w-3 h-3 absolute top-8 left-9 border border-black " />
                 </span>
-                <p className="font-extrabold">
-                  {userData ? userData.name : ""}
-                </p>
+                {selectedUser && (
+                  <div>
+                    <p className="font-extrabold">{selectedUser.name}</p>
+                  </div>
+                )}
               </>
             ) : (
               <SkeletonDemo />
